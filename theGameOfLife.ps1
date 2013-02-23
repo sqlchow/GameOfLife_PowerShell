@@ -144,63 +144,6 @@ Function Show-Matrix
 		Write-Host ""
 	}
 }
-#The game board for game of life is infinite. So, we simulate this by wrapping the
-#width and height.
-Function Get-WrappedWidth
-{
-	param(
-	    [Int]$x,
-	    [Int]$xEdge
-	)
-	$x += $xEdge;
-	if($x -lt 0){
-		$x += $SCRIPT:BoardWidth;
-	}elseif($x -ge $SCRIPT:BoardWidth){
-		$x -= $SCRIPT:BoardWidth;
-	}
-	return $x;
-}
-
-Function Get-WrappedHeight
-{
-	param(
-		[Int]$y,
-		[Int]$yEdge
-	)
-	$y += $yEdge;
-	if($y -lt 0){
-		$y += $SCRIPT:BoardHeight;
-	}elseif($y -ge $SCRIPT:BoardHeight){
-		$y -= $SCRIPT:BoardHeight
-	}
-	return $y;
-}
-
-Function Get-Neighbours
-{
-	param(
-		[Int[,]]$GameMatrix,
-		[Int]$coordX,
-		[Int]$coordY
-	)
-	[Int]$nx = 0;
-	[Int]$ny = 0;
-	[Int]$count = 0;
-	for($nx = -1; $nx -le 1; $nx++)
-	{
-		for($ny = -1; $ny -le 1; $ny++)
-		{
-			if($nx -or $ny)
-			{
-				if($GameMatrix[$(Get-WrappedWidth $coordX $nx), $(Get-WrappedHeight $coordY $ny)])
-				{
-					$count += 1;
-				}
-			}
-		}
-	}
-	return $count;
-}
 
 #Currently Taking 10.5 Secs to generate next generation.
 #consumes around 20-25% cpu.
@@ -315,42 +258,64 @@ Function Draw-Board
 		}
 	}
 }
+
+#Setting a little bit of complex pattern on the board.
+Function Set-SampleOnBoard
+{
+	param(
+		[Int[,]]$ArrayMatrix
+	)
+	$ArrayMatrix[6,1] = 1
+	$ArrayMatrix[7,1] = 1
+	$ArrayMatrix[6,2] = 1
+	$ArrayMatrix[7,2] = 1
+	$ArrayMatrix[6,11] = 1
+	$ArrayMatrix[7,11] = 1
+	$ArrayMatrix[8,11] = 1
+	$ArrayMatrix[9,12] = 1
+	$ArrayMatrix[10,13] = 1
+	$ArrayMatrix[10,14] = 1
+	$ArrayMatrix[9,16] = 1
+	$ArrayMatrix[8,17] = 1
+	$ArrayMatrix[7,17] = 1
+	$ArrayMatrix[6,17] = 1
+	$ArrayMatrix[5,16] = 1
+	$ArrayMatrix[4,14] = 1
+	$ArrayMatrix[4,13] = 1
+	$ArrayMatrix[5,12] = 1
+	$ArrayMatrix[7,15] = 1
+	$ArrayMatrix[7,18] = 1
+	$ArrayMatrix[4,21] = 1
+	$ArrayMatrix[5,21] = 1
+	$ArrayMatrix[6,21] = 1
+	$ArrayMatrix[4,22] = 1
+	$ArrayMatrix[5,22] = 1
+	$ArrayMatrix[6,22] = 1
+	$ArrayMatrix[7,23] = 1
+	$ArrayMatrix[3,23] = 1
+	$ArrayMatrix[3,25] = 1
+	$ArrayMatrix[2,25] = 1
+	$ArrayMatrix[7,25] = 1
+	$ArrayMatrix[8,25] = 1
+	$ArrayMatrix[3,35] = 1
+	$ArrayMatrix[3,36] = 1
+	$ArrayMatrix[4,35] = 1
+	$ArrayMatrix[4,36] = 1
+	return ,$ArrayMatrix;
+}
 Function Main
 {
 	Push-Host;
 	Initialize-Host;
 	$gameBoard = Initialize-GameMatrix 50 50;
 	#Sample filler
-	$gameBoard[25,10] = 1
-	$gameBoard[25,11] = 1
-	$gameBoard[26,11] = 1
-	$gameBoard[27,11] = 1
-	$gameBoard[27,9] = 1
+	$gameBoard = Set-SampleOnBoard $gameBoard
 	Draw-Board $gameBoard
-	for($itr = 0; $itr -lt 5; $itr++)
-	{
+	do{
 		$newBoard = Get-NextGeneration $gameBoard;
 		#Clear-Host;
 		Draw-Board $newBoard;
-	}
-	Pop-Host;
-}
-<#
-Function Main
-{
-	#$Host.UI.RawUI.CursorSize = 25;
-	Push-Host;
-	Initialize-Host;
-	do{
-		$a = Get-CursorPosition;
-		Write-Host -Object $a
-		if(($a[0] -lt $Host.UI.RawUI.BufferSize.Width) -and ($a[1] -lt $host.UI.RawUI.CursorPosition.Y)){
-			Draw-Pixel -X $a[0] -Y $a[1] -ForeColor "Green" -BackColor "Yellow";
-		}
-		Draw-Pixel -X $Host.UI.RawUI.CursorPosition.X -Y $Host.UI.RawUI.CursorPosition.Y -ForeColor "Green" -BackColor "Yellow"
-		Start-Sleep -Milliseconds 1000;
 	}until($Host.UI.RawUI.KeyAvailable)
 	Pop-Host;
 }
-#>
 . Main
