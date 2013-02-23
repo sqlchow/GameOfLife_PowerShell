@@ -1,5 +1,5 @@
 #theGameOfLife.ps1
-#drawn from: http://www.codeproject.com/Articles/241411/PowerShell-Falling-Blocks-Ascii-art-on-the-move
+#Draw-Pixel: drawn from: http://www.codeproject.com/Articles/241411/PowerShell-Falling-Blocks-Ascii-art-on-the-move
 #written by 'Lasse W'
 
 [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms") | Out-Null
