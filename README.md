@@ -9,4 +9,4 @@ There are certain problems with the code currently.
 Copy the code into a file called 'TheGameOfLife.ps1'
 
 ## Execution
-.\TheGameOfLife.ps1
+`.\TheGameOfLife.ps1`
