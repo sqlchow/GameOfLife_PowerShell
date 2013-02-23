@@ -101,15 +101,6 @@ Function Draw-Pixel
 		[Parameter(Mandatory=$false)]
 		[String]$pixel = [Char]9608
 	)
-#  
-#	These lines would do the same thing if you 
-#	prefer the Write-Host style...
-#
-#	$cursor = $Host.UI.RawUI.CursorPosition
-#	$cursor.x = $x
-#	$Host.UI.RawUI.CursorPosition = $cursor #reposition cursor
-#   Write-Host -NoNewline -BackgroundColor $bgColor -ForegroundColor $fgColor $str
-#	
 	$pos = $Host.UI.RawUI.WindowPosition
 	$pos.x = $x
 	$pos.y = $y
@@ -162,8 +153,11 @@ Function Get-WrappedWidth
 	    [Int]$xEdge
 	)
 	$x += $xEdge;
-	while($x -lt 0){$x += $SCRIPT:BoardWidth;}
-	while($x -ge $SCRIPT:BoardWidth){$x -= $SCRIPT:BoardWidth;}
+	if($x -lt 0){
+		$x += $SCRIPT:BoardWidth;
+	}elseif($x -ge $SCRIPT:BoardWidth){
+		$x -= $SCRIPT:BoardWidth;
+	}
 	return $x;
 }
 
@@ -174,8 +168,11 @@ Function Get-WrappedHeight
 		[Int]$yEdge
 	)
 	$y += $yEdge;
-	while($y -lt 0){$y += $SCRIPT:BoardHeight;}
-	while($y -ge $SCRIPT:BoardHeight){$y -= $SCRIPT:BoardHeight}
+	if($y -lt 0){
+		$y += $SCRIPT:BoardHeight;
+	}elseif($y -ge $SCRIPT:BoardHeight){
+		$y -= $SCRIPT:BoardHeight
+	}
 	return $y;
 }
 
@@ -195,11 +192,6 @@ Function Get-Neighbours
 		{
 			if($nx -or $ny)
 			{
-				#$placeX = Get-WrappedWidth $coordX $nx
-				#$placeY = Get-WrappedHeight $coordY $ny
-				#We can put the function calls to get co-ords directly
-				#when getting the positions in the matrix.
-				#if($GameMatrix[$placeX, $placeY])
 				if($GameMatrix[$(Get-WrappedWidth $coordX $nx), $(Get-WrappedHeight $coordY $ny)])
 				{
 					$count += 1;
@@ -230,8 +222,11 @@ Function Get-NextGeneration
 			    [Int]$xEdge
 			)
 			$x += $xEdge;
-			while($x -lt 0){$x += $SCRIPT:BoardWidth;}
-			while($x -ge $SCRIPT:BoardWidth){$x -= $SCRIPT:BoardWidth;}
+			if($x -lt 0){
+				$x += $SCRIPT:BoardWidth;
+			}elseif($x -ge $SCRIPT:BoardWidth){
+				$x -= $SCRIPT:BoardWidth;
+			}
 			return $x;
 		}
 
@@ -242,8 +237,11 @@ Function Get-NextGeneration
 				[Int]$yEdge
 			)
 			$y += $yEdge;
-			while($y -lt 0){$y += $SCRIPT:BoardHeight;}
-			while($y -ge $SCRIPT:BoardHeight){$y -= $SCRIPT:BoardHeight}
+			if($y -lt 0){
+				$y += $SCRIPT:BoardHeight;
+			}elseif($y -ge $SCRIPT:BoardHeight){
+				$y -= $SCRIPT:BoardHeight
+			}
 			return $y;
 		}
 
@@ -263,11 +261,6 @@ Function Get-NextGeneration
 				{
 					if($nx -or $ny)
 					{
-						#$placeX = Get-WrappedWidth $coordX $nx
-						#$placeY = Get-WrappedHeight $coordY $ny
-						#We can put the function calls to get co-ords directly
-						#when getting the positions in the matrix.
-						#if($GameMatrix[$placeX, $placeY])
 						if($ArrayMatrix[$(Get-WrappedWidth $coordX $nx), $(Get-WrappedHeight $coordY $ny)])
 						{
 							$count += 1;
